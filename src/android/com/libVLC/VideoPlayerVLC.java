@@ -81,6 +81,7 @@ public class VideoPlayerVLC extends CordovaPlugin {
         String url;
         JSONObject object;
 
+
         if (action.equals("play")) {
             url = args.getString(0);
             _play(url, true, true);
