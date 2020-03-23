@@ -114,6 +114,13 @@ public class VideoPlayerVLC extends CordovaPlugin {
     }
 
     @Override
+    public void onStop() {
+        super.onStop();
+
+        _filters("stop");
+    }
+
+    @Override
     public void onDestroy() {
         super.onDestroy();
         activity.unregisterReceiver(br);

@@ -161,7 +161,7 @@ public class VLCActivity extends Activity implements VlcListener, View.OnClickLi
         super.onPause();
 
         if (vlcVideoLibrary.isPlaying()) {
-            vlcVideoLibrary.pause();
+            vlcVideoLibrary.stop();
         }
     }
 
@@ -181,6 +181,14 @@ public class VLCActivity extends Activity implements VlcListener, View.OnClickLi
 
         vlcVideoLibrary.stop();
         _sendBroadCast("onDestroyVlc");
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+
+        vlcVideoLibrary.stop();
+        _sendBroadCast("onStopVlc");
     }
 
     @Override
