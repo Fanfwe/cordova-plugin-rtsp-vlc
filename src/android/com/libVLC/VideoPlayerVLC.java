@@ -84,7 +84,7 @@ public class VideoPlayerVLC extends CordovaPlugin {
 
         if (action.equals("play")) {
             url = args.getString(0);
-            _play(url, true, true);
+            _play(url);
             return true;
         }
         else if (action.equals("pause")) {
@@ -105,19 +105,12 @@ public class VideoPlayerVLC extends CordovaPlugin {
 
     @Override
     public void onResume(boolean p) {
-        super.onPause(p);
+      super.onPause(p);
     }
 
     @Override
     public void onPause(boolean p) {
-        super.onPause(p);
-    }
-
-    @Override
-    public void onStop() {
-        super.onStop();
-
-        _filters("stop");
+      super.onPause(p);
     }
 
     @Override
@@ -128,33 +121,12 @@ public class VideoPlayerVLC extends CordovaPlugin {
         _filters("stop");
     }
 
-    private void _play(String uri, boolean autoPlay, boolean hideControls) {
+    private void _play(String uri) {
         _broadcastRCV();
 
         Intent intent = new Intent(activity, VLCActivity.class);
         intent.putExtra("url", uri);
-        intent.putExtra("autoPlay", autoPlay);
-        intent.putExtra("hideControls", hideControls);
         cordova.startActivityForResult(this, intent, 1000);
-    }
-
-    private void _playNext(String uri, boolean autoPlay, boolean hideControls) {
-        Intent intent = new Intent();
-        intent.setAction(BROADCAST_METHODS);
-        intent.putExtra("method", "playNext");
-
-        intent.putExtra("url", uri);
-        intent.putExtra("autoPlay", autoPlay);
-        intent.putExtra("hideControls", hideControls);
-        activity.sendBroadcast(intent);
-    }
-
-    private void _seekPosition(float position) {
-        Intent intent = new Intent();
-        intent.setAction(BROADCAST_METHODS);
-        intent.putExtra("method", "seekPosition");
-        intent.putExtra("position", position);
-        activity.sendBroadcast(intent);
     }
 
     private void _filters(String methodName) {
