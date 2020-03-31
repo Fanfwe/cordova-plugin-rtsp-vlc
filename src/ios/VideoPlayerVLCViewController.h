@@ -11,6 +11,7 @@
 @interface VideoPlayerVLCViewController : UIViewController
 @property(nonatomic) BOOL playOnStart;
 @property(strong, nonatomic) NSString *urlString;
+@property(nonatomic) NSLayoutConstraint *mediaViewTopConstraint;
 
 -(void) play;
 -(void) stop;

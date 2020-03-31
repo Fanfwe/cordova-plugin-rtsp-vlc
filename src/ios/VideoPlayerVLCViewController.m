@@ -40,7 +40,7 @@
     self.closeButton.translatesAutoresizingMaskIntoConstraints = NO;
     
     [self.closeButton setTitle:@"×" forState:UIControlStateNormal];
-    [self.closeButton setFont:[UIFont systemFontOfSize:20]];
+    [self.closeButton.titleLabel setFont:[UIFont systemFontOfSize:20]];
     
     
     self.mediaView.translatesAutoresizingMaskIntoConstraints = NO;
@@ -54,11 +54,9 @@
     NSLayoutConstraint *closeButtonLeftConstraint = [NSLayoutConstraint constraintWithItem:self.closeButton attribute:NSLayoutAttributeLeft relatedBy:NSLayoutRelationEqual toItem:self.view attribute:NSLayoutAttributeLeftMargin multiplier:1.0 constant:0.0];
     NSLayoutConstraint *closeButtonHeightConstraint = [NSLayoutConstraint constraintWithItem:self.closeButton attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEqual toItem:nil attribute:NSLayoutAttributeNotAnAttribute multiplier:1.0 constant:30];
 
-    
-    
     NSLayoutConstraint *mediaViewWidthConstraint = [NSLayoutConstraint constraintWithItem:self.mediaView attribute:NSLayoutAttributeWidth relatedBy:NSLayoutRelationEqual toItem:self.view attribute:NSLayoutAttributeWidth multiplier:1.0 constant:0];
     NSLayoutConstraint *mediaViewCenterHorizontallyConstraint = [NSLayoutConstraint constraintWithItem:self.mediaView attribute:NSLayoutAttributeCenterX relatedBy:NSLayoutRelationEqual toItem:self.view attribute:NSLayoutAttributeCenterX multiplier:1.0 constant:0];
-    NSLayoutConstraint *mediaViewTopConstraint = [NSLayoutConstraint constraintWithItem:self.mediaView attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:self.closeButton attribute:NSLayoutAttributeBottom multiplier:1.0 constant:8.0];
+    self.mediaViewTopConstraint = [NSLayoutConstraint constraintWithItem:self.mediaView attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:self.closeButton attribute:NSLayoutAttributeBottom multiplier:1.0 constant:8.0];
     NSLayoutConstraint *mediaViewBottomConstraint = [NSLayoutConstraint constraintWithItem:self.mediaView attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationEqual toItem:self.view attribute:NSLayoutAttributeBottom multiplier:1.0 constant:0];
     
     
@@ -67,7 +65,7 @@
     [self.view addConstraint:closeButtonHeightConstraint];
     [self.view addConstraint:mediaViewWidthConstraint];
     [self.view addConstraint:mediaViewCenterHorizontallyConstraint];
-    [self.view addConstraint:mediaViewTopConstraint];
+    [self.view addConstraint:self.mediaViewTopConstraint];
     [self.view addConstraint:mediaViewBottomConstraint];
     
     self.mediaPlayer.drawable = self.mediaView;
@@ -110,8 +108,21 @@
     
     // dismiss view from stack
     [self.view removeFromSuperview];
+}
 
+- (void)viewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id <UIViewControllerTransitionCoordinator>)coordinator
+{
+    [super viewWillTransitionToSize:size withTransitionCoordinator:coordinator];
 
+    if (fabs(size.height) < fabs(size.width)) {
+        [self.view removeConstraint:self.mediaViewTopConstraint];
+        self.mediaViewTopConstraint = [NSLayoutConstraint constraintWithItem:self.mediaView attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:self.view attribute:NSLayoutAttributeTop multiplier:1.0 constant:0];
+        [self.view addConstraint:self.mediaViewTopConstraint];
+    } else {
+        [self.view removeConstraint:self.mediaViewTopConstraint];
+        self.mediaViewTopConstraint = [NSLayoutConstraint constraintWithItem:self.mediaView attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:self.closeButton attribute:NSLayoutAttributeBottom multiplier:1.0 constant:8.0];
+        [self.view addConstraint:self.mediaViewTopConstraint];
+    }
 }
 
 @end
